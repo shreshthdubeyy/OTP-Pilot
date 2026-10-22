@@ -1,0 +1,12 @@
+{
+  "expectedAccount": "you@example.com",
+  "expectedSender": "no-reply@example.com",
+  "subjectPattern": "Your sign-in verification code",
+  "otpLength": 6,
+  "validityMinutes": 15,
+  "otpPatterns": [
+    "\\b(?:verification|security|one[- ]time|login|sign[- ]in)?\\s*(?:code|otp)\\s*(?:\\(\\s*one[- ]time\\s+password\\s*\\))?\\s*(?:is|:|-)?\\s*([0-9]{6})\\b",
+    "\\b([0-9]{6})\\s+is\\s+your\\s+(?:verification|security|one[- ]time|login)\\s*(?:code|otp)\\b"
+  ],
+  "websites": []
+}

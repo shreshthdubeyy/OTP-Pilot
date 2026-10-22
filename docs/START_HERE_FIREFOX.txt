@@ -1,0 +1,47 @@
+OTPPILOT — FIREFOX QUICK START
+
+WHAT YOU NEED
+- A Gmail account that receives your service's verification emails.
+- Your own Google Cloud project with Gmail API enabled.
+- A Google OAuth Desktop app client ID (see README.md).
+- Node.js 24 or newer to build the extension.
+
+PREPARE YOUR COPY
+1. In manifests/manifest.firefox.json, replace the sample Gecko ID with an
+   ID unique to you. Do this before installing or submitting it to Mozilla.
+2. In src/shared/firefox-oauth-config.js, replace the sample client ID with
+   your Google Desktop app client ID.
+3. Open a terminal in this folder and run: npm run build:firefox
+
+INSTALL FOR TESTING
+1. In Firefox, open about:debugging#/runtime/this-firefox
+2. Click “Load Temporary Add-on…”
+3. Select dist/firefox/manifest.json.
+
+CONNECT GMAIL
+1. Open OtpPilot Settings and enter your Gmail address and email matching
+   rules: exact sender, a subject phrase, code length, freshness, and patterns.
+2. If Google asks for a client_secret, enter the value from your local
+   Desktop app credentials file and save settings. Never upload that JSON.
+3. Open the extension popup, click “Connect Gmail”, and approve read-only
+   access for the same account you entered in Settings.
+4. Click “Find latest code” when you need a code.
+
+OPTIONAL WEBSITE HELPER
+Add exact HTTPS hostnames in Settings and approve their browser permission.
+On an allowed page, focusing a blank email field fills your configured Gmail
+address. Click “Get code & fill” for the OTP. Review and submit the form
+yourself; OtpPilot never submits it.
+
+PRIVACY NOTES
+- Gmail uses the gmail.readonly scope. Email contents are parsed locally.
+- OTPs are temporary. Firefox saves a refresh token and Desktop client secret
+  in the Firefox profile to remember sign-in; that profile storage is not an
+  encrypted vault. Disconnect clears the saved authorization.
+- If Google OAuth is in Testing, Gmail refresh tokens may expire after seven
+  days. Broader use may require Google verification.
+- Never share your Gmail password, real OTP, access token, refresh token, or
+  credentials JSON.
+
+For complete Google Cloud setup, installation, security notes and troubleshooting,
+read README.md.

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OtpPilot Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header><img class="brand-mark" src="../../icons/otppilot.svg" alt=""><div><h1>OtpPilot</h1><p>Choose one Gmail account and the messages that may contain its codes.</p></div></header>
+    <form id="settings">
+      <fieldset>
+        <legend>Gmail message matching</legend>
+        <label>Dedicated Gmail account<input id="expectedAccount" type="email" autocomplete="email" required placeholder="you@example.com"><small>Only this account will be accepted. Use a dedicated inbox.</small></label>
+        <label>Expected sender email<input id="expectedSender" type="email" required placeholder="no-reply@example.com"></label>
+        <label>Subject contains<input id="subjectPattern" type="text" maxlength="160" required placeholder="Your verification code"></label>
+        <div class="row">
+          <label>Code length<input id="otpLength" type="number" min="4" max="10" required></label>
+          <label>Freshness window (minutes)<input id="validityMinutes" type="number" min="1" max="1440" required></label>
+        </div>
+        <label>OTP patterns <span class="optional">(one per line)</span><textarea id="otpPatterns" rows="4" spellcheck="false" required></textarea><small>Each pattern must have exactly one capture group around the code. Keep patterns specific to message context.</small></label>
+      </fieldset>
+      <fieldset>
+        <legend>Supported websites</legend>
+        <label>Exact website hostnames <span class="optional">(one per line)</span><textarea id="websites" rows="3" spellcheck="false" placeholder="login.example.com"></textarea><small>Use hostnames only: no scheme, path, wildcard, or port. Saving asks the browser for access to only these HTTPS sites. The helper appears beside a detected OTP field.</small></label>
+      </fieldset>
+      <fieldset id="firefox-oauth-settings" hidden>
+        <legend>Firefox sign-in</legend>
+        <label>Google redirect URL<input id="firefoxRedirectUrl" type="text" readonly><small>Firefox uses this automatically during sign-in. You do not need to paste it into Google Cloud.</small></label>
+        <label>Google Desktop app client secret<input id="firefoxClientSecret" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"><small>Enter the client_secret from your local Google credentials file once. OtpPilot saves it with the refresh token in this Firefox profile so Gmail stays connected after restarts. Anyone who can access this Firefox profile may be able to use that saved sign-in. Never send the value in chat.</small></label>
+        <button id="clearFirefoxSecret" class="secondary" type="button">Forget saved Gmail sign-in</button>
+      </fieldset>
+      <div class="footer"><button type="submit">Save settings</button><button id="reset" class="secondary" type="button">Restore examples</button></div>
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+    <aside><strong>Privacy:</strong> the extension reads only recent matching messages after you connect. It does not store email bodies or OTPs. Firefox keeps its access token in temporary memory and stores the refresh token and Desktop app client secret in this Firefox profile to remember sign-in. Disconnect from the popup to revoke access and clear saved sign-in data.</aside>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
