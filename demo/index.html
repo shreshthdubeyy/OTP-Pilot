@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f9fc">
-  <meta name="description" content="See how OtpPilot helps you retrieve a fresh sign-in code and choose when to fill it.">
-  <title>OtpPilot — a calmer sign-in flow</title>
+  <meta name="description" content="OtpPilot finds recent Gmail verification emails and fills codes on websites you allow, when you click.">
+  <title>OtpPilot — email verification helper</title>
   <style>
     :root { color-scheme:light; --ink:#15213a; --muted:#63718a; --blue:#3864e9; --blue-dark:#244cc2; --line:#e3e9f2; --paper:#fff; --wash:#f7f9fc; --green:#16845c; }
     * { box-sizing:border-box; }
@@ -15,12 +15,16 @@
     .brand { display:flex; align-items:center; gap:11px; font-weight:760; letter-spacing:-.035em; font-size:17px; }
     .mark { width:36px; height:36px; display:grid; place-items:center; border-radius:11px; background:#0b0d12; color:#fff; font:700 19px/1 ui-monospace,SFMono-Regular,monospace; box-shadow:0 5px 12px #0b0d1222; }
     .header-note { display:flex; align-items:center; gap:8px; color:#65728a; font-size:12px; font-weight:650; }
-    .status-dot { width:8px; height:8px; border-radius:50%; background:#37ae83; box-shadow:0 0 0 4px #37ae8319; }
     main { padding:62px 0 54px; }
     .hero { max-width:750px; }
     .eyebrow { display:inline-flex; align-items:center; gap:8px; color:#315fe0; font-size:11px; font-weight:780; text-transform:uppercase; letter-spacing:.15em; }
     h1 { max-width:700px; margin:13px 0 14px; font-size:clamp(38px,6vw,62px); line-height:1.02; letter-spacing:-.065em; }
     .intro { max-width:690px; margin:0; color:var(--muted); font-size:17px; line-height:1.65; }
+    .hero-actions { display:flex; align-items:center; gap:14px; margin-top:21px; }
+    .cta { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 16px; border-radius:10px; background:var(--blue); color:white; font-size:12px; font-weight:720; text-decoration:none; box-shadow:0 5px 12px #3864e933; }
+    .cta:hover { background:var(--blue-dark); }
+    .cta:focus-visible,.privacy summary:focus-visible { outline:3px solid #8da5ff; outline-offset:3px; }
+    .cta-note { color:var(--muted); font-size:11px; }
     .grid { display:grid; grid-template-columns:minmax(0,1.08fr) minmax(300px,.78fr); gap:24px; margin-top:39px; align-items:start; }
     .panel { background:var(--paper); border:1px solid var(--line); border-radius:20px; box-shadow:0 20px 60px #25385d12,0 2px 7px #25385d08; }
     .form-panel { padding:27px; }
@@ -38,10 +42,8 @@
     input::placeholder { color:#9aa4b5; }
     input:focus { border-color:#7893ef; box-shadow:0 0 0 3px #3864e91c; }
     .field-note { min-height:18px; margin:6px 1px 0; color:#56806c; font-size:11px; }
-    .mini-helper { position:relative; margin:19px 0 1px; padding:15px; border:1px solid #e2e8f2; border-radius:14px; background:linear-gradient(135deg,#fbfcff,#f7f9fe); }
-    .mini-top { display:flex; align-items:center; gap:9px; color:#26344f; font-weight:740; font-size:12px; }
-    .mini-mark { width:25px; height:25px; display:grid; place-items:center; border-radius:7px; background:#0b0d12; color:white; font:700 13px/1 ui-monospace,SFMono-Regular,monospace; }
-    .mini-helper p { margin:8px 0 0; color:var(--muted); font-size:11px; }
+    .otp-entry { display:flex; align-items:center; gap:8px; }
+    .otp-entry input { min-width:0; flex:1; }
     .btn { display:inline-flex; width:100%; justify-content:center; align-items:center; gap:8px; min-height:43px; margin-top:13px; padding:10px 14px; border:0; border-radius:10px; background:var(--blue); color:white; font-family:inherit; font-size:13px; font-weight:730; cursor:pointer; box-shadow:0 5px 12px #3864e933; transition:background .15s,transform .15s,box-shadow .15s; }
     .btn:hover { background:var(--blue-dark); box-shadow:0 7px 16px #3864e940; transform:translateY(-1px); }
     .btn:focus-visible { outline:3px solid #8da5ff; outline-offset:2px; }
@@ -56,12 +58,20 @@
     .step { position:relative; display:grid; grid-template-columns:34px 1fr; gap:12px; margin:18px 0; }
     .step:not(:last-child)::after { position:absolute; content:""; left:16px; top:33px; bottom:-18px; width:1px; background:#e6ebf3; }
     .number { z-index:1; width:33px; height:33px; display:grid; place-items:center; border:1px solid #e0e7f8; border-radius:11px; background:#f1f4ff; color:#3864df; font-size:12px; font-weight:780; }
-    .step strong { display:block; padding-top:1px; color:#24324b; font-size:12px; }
-    .step span { display:block; margin-top:3px; color:var(--muted); font-size:11px; line-height:1.55; }
-    .side-bottom { display:flex; align-items:center; gap:10px; margin:0 20px 20px; padding:12px 13px; border-radius:12px; background:#f6f8fc; color:#62718a; font-size:11px; }
-    .side-bottom svg { flex:0 0 auto; width:18px; height:18px; color:#5070d6; }
-    footer { padding:18px 0 25px; border-top:1px solid #e1e7f0; color:#7a8494; font-size:11px; text-align:center; }
-    @media(max-width:760px) { .wrap { width:min(100% - 30px,560px); } header { height:70px; } main { padding:43px 0 38px; } .grid { grid-template-columns:1fr; margin-top:28px; } .intro { font-size:15px; } .form-panel { padding:21px; } .header-note { font-size:0; gap:0; } .status-dot { width:9px; height:9px; } }
+    .step > .number { align-self:start; margin:0; }
+    .step-copy strong { display:block; padding-top:1px; color:#24324b; font-size:12px; }
+    .step-copy span { display:block; margin-top:3px; color:var(--muted); font-size:11px; line-height:1.55; }
+    .btn.inline { width:auto; flex:0 0 auto; min-height:46px; margin:0; padding:0 13px; box-shadow:none; font-size:12px; }
+    .about { display:flex; justify-content:space-between; align-items:center; gap:22px; margin-top:19px; padding:16px 20px; }
+    .about p { margin:0; color:#53627a; font-size:12px; }
+    .privacy { flex:0 0 auto; color:#315fe0; font-size:12px; }
+    .privacy summary { cursor:pointer; font-weight:700; }
+    .privacy p { max-width:650px; margin:12px 0 0; color:var(--muted); font-size:11px; line-height:1.6; }
+    footer { display:grid; justify-items:center; gap:10px; padding:18px 0 25px; border-top:1px solid #e1e7f0; color:#7a8494; font-size:11px; text-align:center; }
+    .footer-links { display:flex; align-items:center; gap:18px; }
+    .footer-links a { color:#465875; font-size:11px; font-weight:650; text-decoration:none; }
+    .footer-links a:hover { color:#315fe0; text-decoration:underline; }
+    @media(max-width:760px) { .wrap { width:min(calc(100% - 30px),560px); } header { height:70px; } main { padding:43px 0 38px; } .grid { grid-template-columns:1fr; margin-top:28px; } .intro { font-size:15px; } .hero-actions { align-items:flex-start; flex-direction:column; gap:9px; } .form-panel { padding:21px; } .about { align-items:flex-start; flex-direction:column; gap:10px; } .privacy { width:100%; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
   </style>
 </head>
@@ -69,50 +79,64 @@
   <div class="wrap">
     <header>
       <div class="brand"><span class="mark" aria-hidden="true">›_</span><span>OtpPilot</span></div>
-      <div class="header-note"><span class="status-dot" aria-hidden="true"></span>Built around your choice</div>
+      <div class="header-note">Chrome · Firefox</div>
     </header>
     <main>
       <section class="hero" aria-labelledby="headline">
-        <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A more considered sign-in flow</div>
-        <h1 id="headline">Your sign-in code.<br>Ready when you are.</h1>
-        <p class="intro">Find the latest verification code and choose when to fill it. OtpPilot keeps you in control from inbox to sign-in.</p>
+        <div class="eyebrow">Browser extension · Email verification</div>
+        <h1 id="headline">Fill email verification codes without switching tabs.</h1>
+        <p class="intro">OtpPilot finds recent Gmail messages that match your rules and fills the code on websites you allow—when you click.</p>
+        <div class="hero-actions">
+          <a class="cta" href="https://github.com/shreshthdubeyy/OTP-Pilot#set-up-your-own-copy" target="_blank" rel="noopener noreferrer">Build your own copy</a>
+          <span class="cta-note">Requires a Google Cloud project and your own OAuth client.</span>
+        </div>
       </section>
       <section class="grid" aria-label="Interactive product tour">
         <div class="panel form-panel">
           <div class="panel-head">
             <div class="title-wrap">
               <span class="service-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m5 7 7 5.5L19 7"/></svg></span>
-              <div><h2>Example sign-in</h2><p class="sub">A familiar flow, with one less interruption</p></div>
+              <div><h2>Try the demo</h2><p class="sub">See how click-to-fill works</p></div>
             </div>
-            <span class="secure-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 19 6v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>Manual review</span>
+            <span class="secure-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 19 6v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>Manual submission</span>
           </div>
           <div class="rule"></div>
-          <label for="account">Email address</label>
+          <label for="account">Email</label>
           <input id="account" type="email" autocomplete="email" placeholder="you@example.com">
-          <p id="email-note" class="field-note" aria-live="polite">Select the field to see the email fill preview.</p>
+          <p id="email-note" class="field-note" aria-live="polite">Click the field to fill the saved email address.</p>
           <label for="otp">Verification code</label>
-          <input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code">
-          <div class="mini-helper">
-            <div class="mini-top"><span class="mini-mark" aria-hidden="true">›_</span>OtpPilot helper</div>
-            <p>Get a fresh code when you need it. Check the field, then submit the form yourself.</p>
-            <button id="fill" class="btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Get code &amp; fill</button>
+          <div class="otp-entry">
+            <input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code">
+            <button id="fill" class="btn inline" type="button" title="Fill the code with OtpPilot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Get code</button>
           </div>
           <p id="code-note" class="field-note" aria-live="polite"></p>
-          <button id="verify" class="btn secondary" type="button">Review and verify</button>
+          <button id="verify" class="btn secondary" type="button">Check code</button>
           <p id="verify-note" class="field-note" aria-live="polite"></p>
         </div>
         <aside class="panel side" aria-label="How OtpPilot works">
-          <div class="side-head"><h2>Simple by design</h2><p>Three clear steps. You stay in control.</p></div>
+          <div class="side-head"><h2>How it works</h2><p>Three steps from email to sign-in.</p></div>
           <div class="steps">
-            <div class="step"><span class="number">01</span><div><strong>Choose your matching rules</strong><span>Set the inbox, sender, subject, code format and how recent a message must be.</span></div></div>
-            <div class="step"><span class="number">02</span><div><strong>Allow only the sites you trust</strong><span>The inline helper appears only on exact HTTPS hostnames you add.</span></div></div>
-            <div class="step"><span class="number">03</span><div><strong>Review before you continue</strong><span>Fill the code with a click, check it, then submit the sign-in form yourself.</span></div></div>
+            <div class="step"><span class="number">01</span><div class="step-copy"><strong>Set email rules</strong><span>Match codes by sender, subject and age.</span></div></div>
+            <div class="step"><span class="number">02</span><div class="step-copy"><strong>Choose websites</strong><span>Enable the helper only on sites you allow.</span></div></div>
+            <div class="step"><span class="number">03</span><div class="step-copy"><strong>Click to fill</strong><span>Review the code, then submit the form yourself.</span></div></div>
           </div>
-          <div class="side-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>Designed for privacy, clear choices and less friction.</span></div>
         </aside>
       </section>
+      <section class="panel about" aria-label="Privacy information">
+        <p>Email matching runs in your browser; OtpPilot has no email-processing server.</p>
+        <details class="privacy">
+          <summary>Privacy details</summary>
+          <p>OtpPilot uses Google’s Gmail read-only permission for the connected account. That permission can read any message in the account; OtpPilot’s search is limited to up to five recent messages matching your rules. A dedicated inbox keeps verification mail separate.</p>
+        </details>
+      </section>
     </main>
-    <footer>Interactive demo with fictional details only · No live Gmail connection or network requests</footer>
+    <footer>
+      <span>Demo uses sample values. It does not connect to Gmail or make network requests.</span>
+      <nav class="footer-links" aria-label="Social links">
+        <a href="https://github.com/shreshthdubeyy/OTP-Pilot" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/shreshthdubey/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </nav>
+    </footer>
   </div>
   <script>
     const account = document.querySelector('#account');
@@ -129,18 +153,18 @@
     account.addEventListener('focus', () => {
       if (!account.value.trim()) {
         setAndNotify(account, 'you@example.com');
-        emailNote.textContent = 'Example email filled. Existing text is never overwritten.';
+        emailNote.textContent = 'Example email filled. Existing text is unchanged.';
       }
     });
     document.querySelector('#fill').addEventListener('click', () => {
       setAndNotify(otp, '482913');
-      codeNote.textContent = 'Example code filled. The sign-in form has not been submitted.';
+      codeNote.textContent = 'Sample code filled. The sign-in form remains open.';
       verifyNote.textContent = '';
     });
     document.querySelector('#verify').addEventListener('click', () => {
       verifyNote.textContent = account.value && otp.value === '482913'
-        ? 'Example verified locally. In real use, the website handles verification after you submit.'
-        : 'Enter the example email and use Get code & fill first.';
+        ? 'Code accepted in this example.'
+        : 'Enter the example email and fill the code first.';
     });
   </script>
 </body>

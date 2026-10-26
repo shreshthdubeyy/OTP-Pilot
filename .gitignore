@@ -1,0 +1,17 @@
+# Generated extension builds and release archives
+dist/
+node_modules/
+
+# Local credentials and secrets
+.env
+.env.*
+!.env.example
+client_secret*.json
+credentials*.json
+*oauth*secret*.json
+*.pem
+
+# Browser packages and local editor/OS files
+*.xpi
+.DS_Store
+Thumbs.db

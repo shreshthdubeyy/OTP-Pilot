@@ -6,6 +6,28 @@ OtpPilot runs in your browser. It searches a few recent Gmail messages using rul
 
 > This repository is a starter project. It contains placeholders, not working Google credentials. You need your own Google Cloud project and OAuth client before Gmail connection can work.
 
+## Try the visual demo
+
+Open [`demo/index.html`](demo/index.html) in a browser. It is a local mock-up: it uses a made-up account and dummy code, makes no network requests, and does not connect to Gmail. It demonstrates the helper interaction and manual Verify step.
+
+### LinkedIn banner
+
+Use this 1584 × 396 banner for a LinkedIn profile or post:
+
+![OtpPilot LinkedIn banner](assets/otppilot-linkedin-banner.png)
+
+## Publish the demo on GitHub Pages
+
+This project includes a GitHub Actions workflow that publishes **only the contents of `demo/`** as a static website. The web demo is a mock-up; it does not connect to Gmail or expose extension settings or credentials.
+
+1. Put the contents of this folder in a GitHub repository. The repository must include `.github/workflows/pages.yml`. If GitHub's browser upload skips the hidden `.github` folder, create that file in GitHub using **Add file → Create new file**, then paste the workflow from this project.
+2. The workflow is set to publish when you push to the `main` branch. If your repository uses another default branch, edit `branches: [main]` in `.github/workflows/pages.yml` to match it.
+3. On GitHub, open the repository's **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
+4. Open the **Actions** tab and wait for **Publish demo to GitHub Pages** to complete successfully. The first run may take a few minutes.
+5. Open the address shown in **Settings → Pages**. For a normal repository it will look like `https://YOUR-GITHUB-NAME.github.io/REPOSITORY-NAME/`.
+
+The workflow deploys the demo page at the site root, so it opens directly at that address. You can still open `demo/index.html` locally without GitHub Pages.
+
 ## What you need
 
 - A desktop version of Chrome or Firefox.
@@ -108,3 +130,11 @@ docs/             Firefox quick start, security and AMO notes
 - **No fresh matching code:** check sender, subject phrase, code length, pattern and freshness window. Use a recent message in the configured Gmail account.
 - **Inline helper is missing:** add the exact HTTPS hostname in Settings and approve browser site access. The page must have a recognizable OTP field. The email auto-fill only targets blank email-type fields.
 - **The website rejects a filled OTP:** ensure the code is still fresh. OtpPilot emits input/change events for the site's form model but never submits the form. For separate digit boxes, copy from the popup.
+
+## Example configuration
+
+[`config.example.json`](config.example.json) uses a placeholder Gmail address and sender. Replace them in the extension Settings with rules for your own provider. The sample code in tests is synthetic and is not a real login code.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). It permits reuse, modification and redistribution subject to the license terms.
