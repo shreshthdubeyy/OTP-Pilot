@@ -8,7 +8,27 @@ OtpPilot runs in your browser. It searches a few recent Gmail messages using rul
 
 ## Try the visual demo
 
-Open [`demo/index.html`](demo/index.html) in a browser. It is a local mock-up: it uses a made-up account and dummy code, makes no network requests, and does not connect to Gmail. It demonstrates the helper interaction and manual Verify step.
+**[Open the live demo](https://shreshthdubeyy.github.io/OTP-Pilot/)**. It is a mock-up: it uses a made-up account and dummy code, makes no network requests, and does not connect to Gmail. It demonstrates the helper interaction and manual Verify step.
+
+To inspect or run the demo locally, open [`demo/index.html`](demo/index.html). GitHub displays that link as source code; it is not the live website.
+
+### LinkedIn banner
+
+Use this 1584 × 396 banner for a LinkedIn profile or post:
+
+![OtpPilot LinkedIn banner](assets/otppilot-linkedin-banner.png)
+
+## Publish the demo on GitHub Pages
+
+This project includes a GitHub Actions workflow that publishes **only the contents of `demo/`** as a static website. The web demo is a mock-up; it does not connect to Gmail or expose extension settings or credentials.
+
+1. Put the contents of this folder in a GitHub repository. The repository must include `.github/workflows/pages.yml`. If GitHub's browser upload skips the hidden `.github` folder, create that file in GitHub using **Add file → Create new file**, then paste the workflow from this project.
+2. The workflow is set to publish when you push to the `main` branch. If your repository uses another default branch, edit `branches: [main]` in `.github/workflows/pages.yml` to match it.
+3. On GitHub, open the repository's **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
+4. Open the **Actions** tab and wait for **Publish demo to GitHub Pages** to complete successfully. The first run may take a few minutes.
+5. Open the address shown in **Settings → Pages**. For a normal repository it will look like `https://YOUR-GITHUB-NAME.github.io/REPOSITORY-NAME/`.
+
+The workflow deploys the demo page at the site root, so it opens directly at that address. You can still open `demo/index.html` locally without GitHub Pages.
 
 ## What you need
 
@@ -97,6 +117,7 @@ src/content/      Allowlist-only inline helper
 src/options/      Matching rules and website permissions
 src/popup/        Connect, fetch, reveal and copy controls
 src/shared/       Parser, validation, allowlist and messages
+assets/           LinkedIn banner and GitHub repository preview
 manifests/        Firefox-specific manifest
 tests/            Synthetic parser, pattern and allowlist tests
 demo/             Standalone, no-network mock-up
