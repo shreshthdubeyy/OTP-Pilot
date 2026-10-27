@@ -12,12 +12,6 @@ OtpPilot runs in your browser. It searches a few recent Gmail messages using rul
 
 To inspect or run the demo locally, open [`demo/index.html`](demo/index.html). GitHub displays that link as source code; it is not the live website.
 
-### LinkedIn banner
-
-Use this 1584 × 396 banner for a LinkedIn profile or post:
-
-![OtpPilot LinkedIn banner](assets/otppilot-linkedin-banner.png)
-
 ## Publish the demo on GitHub Pages
 
 This project includes a GitHub Actions workflow that publishes **only the contents of `demo/`** as a static website. The web demo is a mock-up; it does not connect to Gmail or expose extension settings or credentials.
